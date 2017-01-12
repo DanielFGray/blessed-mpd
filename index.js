@@ -22,15 +22,9 @@ function main(config) {
     dockBorders: true,
   })
 
-  client.on('ready', () => {
-    playlistView(client, screen, config)
-  })
+  client.on('ready', () => playlistView(client, screen, config))
 
-  screen.key([ 'q', 'C-c' ], () => {
-    // screen.destroy()
-    // if (logL.length > 0) console.log(logL)
-    process.exit(0)
-  })
+  screen.key([ 'q', 'C-c' ], () => process.exit(0))
 
   screen.render()
 }
