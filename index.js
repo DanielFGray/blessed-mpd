@@ -1,44 +1,10 @@
 const mpd = require('mpd')
 const Blessed = require('blessed')
 
-function playlistView(client, screen) {
-  const playlist = Blessed.list({
-    align: 'left',
-    keys: true,
-    // tags: true,
-    vi: true,
-    clickable: true,
-    scrollable: true,
-    mouse: true,
-    style: {
-      selected: {
-        bg: 'blue',
-        fg: 'black',
-      },
-    },
-    width: '100%',
-    height: '100%',
-  })
+const cfg = require('./config.js')
+const playlistView = require('./playlist.js')
 
-  client.sendCommand(mpd.cmd('playlist', []), (err, msg) => {
-    if (err) throw err
-    const songs = msg.split('\n')
-      .filter(e => e.length > 0)
-      .map(e => e.slice(e.indexOf(' ') + 1))
-
-    playlist.setItems(songs)
-  })
-
-  playlist.on('select', (e, i) => {
-    client.sendCommand(mpd.cmd('play', [ i ]))
-  })
-
-  screen.append(playlist)
-  playlist.focus()
-  screen.render()
-}
-
-function main() {
+function main(config) {
   const client = mpd.connect({
     port: process.env.MPD_PORT || 6600,
     host: process.env.MPD_HOST || 'localhost',
@@ -57,14 +23,16 @@ function main() {
   })
 
   client.on('ready', () => {
-    playlistView(client, screen)
+    playlistView(client, screen, config)
   })
 
   screen.key([ 'q', 'C-c' ], () => {
+    // screen.destroy()
+    // if (logL.length > 0) console.log(logL)
     process.exit(0)
   })
 
   screen.render()
 }
 
-main()
+cfg.then(c => main(c))
