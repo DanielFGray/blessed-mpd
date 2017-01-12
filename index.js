@@ -8,8 +8,7 @@ const client = mpd.connect({
 })
 
 const screen = Blessed.screen({
-  // Example of optional settings:
-  smartCSR: true,
+  fastCSR: true,
   useBCE: true,
   cursor: {
     artificial: true,
@@ -22,19 +21,23 @@ const screen = Blessed.screen({
 
 screen.key([ 'q', 'C-c' ], () => process.exit(0));
 
-const table = Blessed.contrib.table({
+const playlist = Blessed.list({
+  align: 'left',
   keys: true,
-  fg: 'brightwhite',
-  selectedFg: 'black',
-  selectedBg: 'blue',
-  interactive: true,
-  label: 'Playlist',
+  // tags: true,
+  vi: true,
+  clickable: true,
+  scrollable: true,
+  mouse: true,
+  style: {
+    selected: {
+      bg: 'blue',
+      fg: 'black',
+    },
+  },
   width: '100%',
   height: '100%',
-  border: { type: 'line', fg: 'cyan' },
-  columnSpacing: 1,
-  columnWidth: [ 100000 ],
-})
+});
 
 client.on('ready', () => {
   client.sendCommand(mpd.cmd('playlist', []), (err, msg) => {
@@ -42,16 +45,14 @@ client.on('ready', () => {
     const songs = msg.split('\n')
       .filter(e => e.length > 0)
       .map(e => e.slice(e.indexOf(' ') + 1))
+   // .map(id3 tags, user formatting, etc)
 
-    table.setData({
-      headers: [ 'Path' ],
-      data: songs.map(e => [ e ]),
-    })
+    playlist.setItems(songs)
   })
 })
 
-table.focus()
+playlist.focus()
 
-screen.append(table)
+screen.append(playlist)
 
 screen.render()
