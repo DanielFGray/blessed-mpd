@@ -29,6 +29,10 @@ function playlistView(client, screen) {
     playlist.setItems(songs)
   })
 
+  playlist.on('select', (e, i) => {
+    client.sendCommand(mpd.cmd('play', [ i ]))
+  })
+
   screen.append(playlist)
   playlist.focus()
   screen.render()
