@@ -1,25 +1,7 @@
 const mpd = require('mpd')
 const Blessed = require('blessed')
-Blessed.contrib = require('blessed-contrib')
 
-const client = mpd.connect({
-  port: process.env.MPD_PORT || 6600,
-  host: process.env.MPD_HOST || 'localhost',
-})
-
-const screen = Blessed.screen({
-  fastCSR: true,
-  useBCE: true,
-  cursor: {
-    artificial: true,
-    blink: true,
-    shape: 'underline',
-  },
-  debug: true,
-  dockBorders: true,
-})
-
-function playlistView() {
+function playlistView(client, screen) {
   const playlist = Blessed.list({
     align: 'left',
     keys: true,
@@ -52,12 +34,33 @@ function playlistView() {
   screen.render()
 }
 
-client.on('ready', () => {
-  playlistView()
-})
+function main() {
+  const client = mpd.connect({
+    port: process.env.MPD_PORT || 6600,
+    host: process.env.MPD_HOST || 'localhost',
+  })
 
-screen.key([ 'q', 'C-c' ], () => {
-  process.exit(0)
-})
+  const screen = Blessed.screen({
+    fastCSR: true,
+    useBCE: true,
+    cursor: {
+      artificial: true,
+      blink: true,
+      shape: 'underline',
+    },
+    debug: true,
+    dockBorders: true,
+  })
 
-screen.render()
+  client.on('ready', () => {
+    playlistView(client, screen)
+  })
+
+  screen.key([ 'q', 'C-c' ], () => {
+    process.exit(0)
+  })
+
+  screen.render()
+}
+
+main()
