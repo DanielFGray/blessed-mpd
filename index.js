@@ -19,40 +19,45 @@ const screen = Blessed.screen({
   dockBorders: true,
 })
 
-screen.key([ 'q', 'C-c' ], () => process.exit(0));
-
-const playlist = Blessed.list({
-  align: 'left',
-  keys: true,
-  // tags: true,
-  vi: true,
-  clickable: true,
-  scrollable: true,
-  mouse: true,
-  style: {
-    selected: {
-      bg: 'blue',
-      fg: 'black',
+function playlistView() {
+  const playlist = Blessed.list({
+    align: 'left',
+    keys: true,
+    // tags: true,
+    vi: true,
+    clickable: true,
+    scrollable: true,
+    mouse: true,
+    style: {
+      selected: {
+        bg: 'blue',
+        fg: 'black',
+      },
     },
-  },
-  width: '100%',
-  height: '100%',
-});
+    width: '100%',
+    height: '100%',
+  })
 
-client.on('ready', () => {
   client.sendCommand(mpd.cmd('playlist', []), (err, msg) => {
     if (err) throw err
     const songs = msg.split('\n')
       .filter(e => e.length > 0)
       .map(e => e.slice(e.indexOf(' ') + 1))
-   // .map(id3 tags, user formatting, etc)
 
     playlist.setItems(songs)
   })
+
+  screen.append(playlist)
+  playlist.focus()
+  screen.render()
+}
+
+client.on('ready', () => {
+  playlistView()
 })
 
-playlist.focus()
-
-screen.append(playlist)
+screen.key([ 'q', 'C-c' ], () => {
+  process.exit(0)
+})
 
 screen.render()
