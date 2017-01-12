@@ -1,0 +1,22 @@
+{
+  "extends": "airbnb-base",
+  "env": {
+    "node": true
+  },
+  "rules": {
+    "semi": 0,
+    "array-bracket-spacing": [ 2, "always" ],
+    "no-nested-ternary": 1,
+    "no-else-return": 1,
+    "space-unary-ops": [
+      2,
+      {
+        "words": true,
+        "nonwords": false,
+        "overrides": {
+          "!": true
+        }
+      }
+    ]
+  }
+}
