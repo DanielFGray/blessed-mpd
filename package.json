@@ -1,0 +1,11 @@
+{
+  "name": "blessed-mpd",
+  "version": "0.0.1",
+  "description": "mpd client",
+  "main": "index.js",
+  "author": "DanielFGray <DanielFGray@gmail.com>",
+  "license": "GPL-3.0",
+  "dependencies": {
+    "blessed": "^0.1.81"
+  }
+}
