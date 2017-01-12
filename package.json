@@ -5,6 +5,10 @@
   "main": "index.js",
   "author": "DanielFGray <DanielFGray@gmail.com>",
   "license": "GPL-3.0",
+  "scripts": {
+    "start": "node index.js",
+    "lint": "eslint ."
+  },
   "dependencies": {
     "blessed": "^0.1.81",
     "blessed-contrib": "^4.6.5",
