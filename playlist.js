@@ -1,11 +1,13 @@
 const mpd = require('mpd')
 const Blessed = require('blessed')
+const { parseMpd } = require('./utils.js')
 
 function playlistView(client, screen, config) {
+  let playlistData = []
   const playlist = Blessed.list({
     align: 'left',
     keys: true,
-    // tags: true,
+    tags: true,
     vi: true,
     clickable: true,
     scrollable: true,
@@ -21,16 +23,21 @@ function playlistView(client, screen, config) {
     height: '100%',
   })
 
-  const updatePlaylist = () =>
-    client.sendCommand(mpd.cmd('playlist', []), (err, msg) => {
+  const updatePlaylist = () => {
+    client.sendCommand(mpd.cmd('playlistinfo', []), (err, msg) => {
       if (err) throw err
-      const songs = msg.split('\n')
-        .filter(e => e.length > 0)
-        .map(e => e.slice(e.indexOf(' ') + 1))
-      playlist.setItems(songs)
+      playlistData = parseMpd(msg).data
+      const items = playlistData
+        .map(e => `${e.artist} - ${e.album} - ${e.title} `)
+      playlist.setItems(items)
     })
+  }
 
-  client.on('playlist', updatePlaylist)
+  client.on('playlist', () => {
+    console.log('playlist changed')
+    updatePlaylist()
+  })
+
   playlist.on('select', (e, i) => {
     client.sendCommand(mpd.cmd('play', [ i ]))
   })
