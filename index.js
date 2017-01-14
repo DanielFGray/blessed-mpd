@@ -26,6 +26,11 @@ function main(config) {
 
   screen.key([ 'q', 'C-c' ], () => process.exit(0))
 
+  screen.key([ '>' ], () => client.sendCommand(mpd.cmd('next', [])))
+  screen.key([ '<' ], () => client.sendCommand(mpd.cmd('previous', [])))
+  screen.key([ 's' ], () => client.sendCommand(mpd.cmd('stop', [])))
+  screen.key([ 'p' ], () => client.sendCommand(mpd.cmd('pause', [])))
+
   screen.render()
 }
 
