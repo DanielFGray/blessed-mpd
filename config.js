@@ -2,8 +2,9 @@ const fs = require('fs')
 const Promise = require('bluebird')
 const yaml = require('js-yaml')
 
+const readFile = Promise.promisify(fs.readFile)
+
 const defaults = {
-// module.exports = {
   playlist: {
     default_fg: undefined,
     selected_bg: 'blue',
@@ -17,7 +18,7 @@ const configDir = process.env.XDG_CONFIG_DIR || `${process.env.HOME}/.config`
 const configFile = `${configDir}/blessed-mpd/conf.yaml`
 
 /* eslint-disable no-console */
-module.exports = Promise.try(() => Promise.promisify(fs.readFile)(configFile))
+module.exports = Promise.try(() => readFile(configFile))
   .catch((e) => {
     if (e.cause.code !== 'ENOENT') console.log('error opening config file', e)
   })

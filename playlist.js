@@ -33,10 +33,7 @@ function playlistView(client, screen, config) {
     })
   }
 
-  client.on('playlist', () => {
-    console.log('playlist changed')
-    updatePlaylist()
-  })
+  client.on('playlist', () => updatePlaylist())
 
   playlist.on('select', (e, i) => {
     client.sendCommand(mpd.cmd('play', [ i ]))

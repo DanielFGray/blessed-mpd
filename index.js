@@ -16,7 +16,7 @@ function main(config) {
     cursor: {
       artificial: true,
       blink: true,
-      shape: 'underline',
+      shape: 'block',
     },
     debug: true,
     dockBorders: true,
