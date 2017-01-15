@@ -27,8 +27,8 @@ const configFile = `${configDir}/blessed-mpd/conf.yaml`
 /* eslint-disable no-console */
 module.exports = Promise.try(() => readFile(configFile))
   .catch((e) => {
-    if (e.cause.code !== 'ENOENT') console.log('error opening config file', e)
+    if (e.code !== 'ENOENT') console.log('error opening config file:\n', e)
   })
   .then(data => yaml.load(data))
-  .catch(e => console.log('error parsing config file', e))
+  .catch(e => console.log('error parsing config file:\n', e.message))
   .then(e => utils.mergeDeep(defaults, e))
