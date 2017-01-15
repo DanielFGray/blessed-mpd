@@ -11,12 +11,25 @@ function playlistView(client, screen, config) {
     vi: true,
     clickable: true,
     scrollable: true,
+    scrollbar: {
+      ch: config.scrollbar.char,
+    },
     mouse: true,
+    invertSelected: true,
+    label: ' Playlist ',
+    border: 'line',
     style: {
-      fg: config.playlist.default_fg,
+      padding: '3',
+      border: {
+        fg: 'black',
+      },
       selected: {
         bg: config.playlist.selected_bg,
         fg: config.playlist.selected_fg,
+      },
+      scrollbar: {
+        fg: config.scrollbar.fg,
+        bg: config.scrollbar.bg,
       },
     },
     width: '100%',
@@ -28,21 +41,19 @@ function playlistView(client, screen, config) {
       if (err) throw err
       playlistData = parseMpd(msg).data
       const items = playlistData
-        .map(e => `${e.artist} - ${e.album} - ${e.title} `)
+        .map(e => config.playlist.format
+          .replace(/%([^\s%]+)%/g, (_, match) => // eslint-disable-line no-confusing-arrow
+            ! match ? '%' : match in e ? e[match] : match)) // eslint-disable-line no-nested-ternary
       playlist.setItems(items)
+      screen.render()
     })
   }
 
-  client.on('playlist', () => updatePlaylist())
-
-  playlist.on('select', (e, i) => {
-    client.sendCommand(mpd.cmd('play', [ i ]))
-  })
+  playlist.on('select', (e, i) => client.sendCommand(mpd.cmd('play', [ i ])))
 
   updatePlaylist()
   screen.append(playlist)
   playlist.focus()
-  screen.render()
 }
 
 module.exports = playlistView

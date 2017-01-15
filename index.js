@@ -1,6 +1,5 @@
 const mpd = require('mpd')
 const Blessed = require('blessed')
-
 const cfg = require('./config.js')
 const playlistView = require('./playlist.js')
 
@@ -30,8 +29,6 @@ function main(config) {
   screen.key([ '<' ], () => client.sendCommand(mpd.cmd('previous', [])))
   screen.key([ 's' ], () => client.sendCommand(mpd.cmd('stop', [])))
   screen.key([ 'p' ], () => client.sendCommand(mpd.cmd('pause', [])))
-
-  screen.render()
 }
 
 cfg.then(c => main(c))

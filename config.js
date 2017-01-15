@@ -1,6 +1,7 @@
 const fs = require('fs')
 const Promise = require('bluebird')
 const yaml = require('js-yaml')
+const utils = require('./utils.js')
 
 const readFile = Promise.promisify(fs.readFile)
 
@@ -11,6 +12,12 @@ const defaults = {
     selected_fg: 'black',
     playing_fg: 'green',
     playing_bg: undefined,
+    format: '{green-fg}%artist%{/green-fg} / {red-fg}(%date%) %album%{/red-fg} / {blue-fg}%track% - %title%{/blue-fg}',
+  },
+  scrollbar: {
+    fg: 'brightblack',
+    bg: undefined,
+    char: '░',
   },
 }
 
@@ -24,4 +31,4 @@ module.exports = Promise.try(() => readFile(configFile))
   })
   .then(data => yaml.load(data))
   .catch(e => console.log('error parsing config file', e))
-  .then(e => Object.assign(defaults, e))
+  .then(e => utils.mergeDeep(defaults, e))
