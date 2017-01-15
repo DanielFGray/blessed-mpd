@@ -17,11 +17,11 @@ function playlistView(client, screen, config) {
     mouse: true,
     invertSelected: true,
     label: ' Playlist ',
-    border: 'line',
+    border: config.playlist.border,
     style: {
-      padding: '3',
+      fg: config.playlist.default_fg,
       border: {
-        fg: 'black',
+        fg: config.playlist.border_color,
       },
       selected: {
         bg: config.playlist.selected_bg,
@@ -52,8 +52,9 @@ function playlistView(client, screen, config) {
   playlist.on('select', (e, i) => client.sendCommand(mpd.cmd('play', [ i ])))
 
   updatePlaylist()
-  screen.append(playlist)
+  screen.prepend(playlist)
   playlist.focus()
+  return playlist
 }
 
 module.exports = playlistView

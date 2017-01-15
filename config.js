@@ -13,11 +13,19 @@ const defaults = {
     playing_fg: 'green',
     playing_bg: undefined,
     format: '{green-fg}%artist%{/green-fg} / {red-fg}(%date%) %album%{/red-fg} / {blue-fg}%track% - %title%{/blue-fg}',
+    border: undefined,
+    border_color: 'brightblack',
   },
   scrollbar: {
     fg: 'brightblack',
     bg: undefined,
     char: '░',
+  },
+  progress: {
+    char: '░',
+    position: 'bottom',
+    fg: undefined,
+    bg: 'black',
   },
 }
 
