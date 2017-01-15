@@ -74,7 +74,7 @@ function main(config) {
   client.on('ready', () => {
     getCurrentSong()
     layout.append(headerLine)
-    // layout.append(playlistView(client, screen, config))
+    layout.append(playlistView(client, screen, config))
     layout.append(progress)
     screen.render()
   })
